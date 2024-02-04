@@ -30,7 +30,7 @@ func (s *MaskSensitive) SetMedium(fields ...string) {
 	s.MaskLevelMedium = append(s.MaskLevelMedium, fields...)
 }
 
-// username "u***e"
+// username "uw***we"
 func (s *MaskSensitive) SetLow(fields ...string) {
 	s.MaskLevelLow = append(s.MaskLevelLow, fields...)
 }
@@ -40,7 +40,7 @@ func NewMaskSensitive() *MaskSensitive {
 	level.veryHigh = append(level.veryHigh, "Password")
 	level.High = append(level.High, "mobileNO", "phone")
 	level.Medium = append(level.Medium, "Email")
-	level.Low = append(level.Low, "username", "name")
+	level.Low = append(level.Low, "Username")
 
 	return &MaskSensitive{
 		MaskLevelVeryHigh: level.veryHigh,
@@ -113,7 +113,7 @@ func (m *MaskSensitive) checkFieldSensitive(fieldName string, fieldValue any) an
 	} else if contains(m.MaskLevelMedium, fieldName) {
 		fieldValue = maskValue(fieldValue)
 	} else if contains(m.MaskLevelLow, fieldName) {
-		fieldValue = maskMiddleCharacters(fieldValue.(string), 1, 1)
+		fieldValue = maskMiddleCharacters(fieldValue.(string), 2, 2)
 	} else {
 		fieldValue = m.MaskSensitiveData(fieldValue)
 	}
@@ -149,7 +149,7 @@ func maskString(input string) string {
 	if isValidEmail(input) {
 		return maskEmail(input)
 	}
-	return "********"
+	return maskMiddleCharacters(input, 3, 0)
 }
 
 func ValidateBirthday(birthday string) (int64, error) {
