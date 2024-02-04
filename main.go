@@ -1,54 +1,25 @@
 package main
 
-import (
-	"encoding/json"
-	"net/http"
-
-	"github.com/sing3demons/sensitive/mask/masking"
-)
-
-type User struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Name     string `json:"name"`
-	MobileNo string `json:"mobileNO"`
-	NickName string `json:"nickName"`
-	User     IUser  `json:"user"`
-}
-type IUser struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Name     string `json:"name"`
-	MobileNo string `json:"mobileNO"`
-}
-
-type Response struct {
-	Status string `json:"status"`
-	Data   User   `json:"data"`
-}
+import "fmt"
 
 func main() {
-	data := User{
-		Email:    "sing@dev.com",
-		NickName: "sing",
-		Password: "123456",
-		Name:     "sing",
-		MobileNo: "0987654321",
-		User: IUser{
-			Email: "sing@dev..com",
-		},
+	jobs := make(chan int, 100)
+	results := make(chan int, 100)
+
+	go worker(jobs, results)
+
+	for i := 0; i < 10; i++ {
+		jobs <- i
 	}
-	response := Response{
-		Status: "success",
-		Data:   data,
+	close(jobs)
+
+	for i := 0; i < 10; i++ {
+		result := <-results
+		fmt.Println("Result:", result)
 	}
-
-	sensitive := masking.NewMaskSensitive()
-	mk := sensitive.MaskSensitiveData(response)
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(mk)
-	})
-
-	http.ListenAndServe(":8080", nil)
+}
+func worker(jobs <-chan int, results chan<- int) {
+	for job := range jobs {
+		results <- job * 2
+	}
 }
