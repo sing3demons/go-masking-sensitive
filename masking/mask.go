@@ -15,22 +15,22 @@ type SetMaskSensitive struct {
 	Low      []string
 }
 
-// password
+// password "******"
 func (s *MaskSensitive) SetVeryHigh(fields ...string) {
 	s.MaskLevelVeryHigh = append(s.MaskLevelVeryHigh, fields...)
 }
 
-// mobileNO
+// mobileNO "XX-XXX-XX21"
 func (s *MaskSensitive) SetHigh(fields ...string) {
 	s.MaskLevelHigh = append(s.MaskLevelHigh, fields...)
 }
 
-// Email
+// Email "t***@test.com"
 func (s *MaskSensitive) SetMedium(fields ...string) {
 	s.MaskLevelMedium = append(s.MaskLevelMedium, fields...)
 }
 
-// username, name
+// username "u***e"
 func (s *MaskSensitive) SetLow(fields ...string) {
 	s.MaskLevelLow = append(s.MaskLevelLow, fields...)
 }
